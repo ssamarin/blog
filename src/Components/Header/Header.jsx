@@ -2,21 +2,20 @@ import React from 'react';
 import styled from 'styled-components';
 
 const HeaderWrapper = styled.header`
-  padding-top: 64px;
   margin-bottom: 24px;
+  padding-top: 64px;
 
   h1 {
-    cursor: pointer;
+    position: relative;
+    color: #0a0a0a;
     font-weight: 700;
     font-size: 60px;
-    position: relative;
     line-height: 113%;
     text-align: center;
+    cursor: pointer;
     transition: transform 0.6s ease;
-    color: #0a0a0a;
 
     &::before {
-      content: '';
       position: absolute;
       bottom: -6px;
       left: 0;
@@ -25,6 +24,7 @@ const HeaderWrapper = styled.header`
       background-color: #ccc;
       transform: scaleX(0);
       transition: transform 0.3s ease;
+      content: "";
     }
 
     &:hover::before {
