@@ -20,12 +20,23 @@ function usePostsService() {
       dispatch(postsFetched(resp.slice(+offset, +limit)));
     } catch (e) {
       dispatch(postsFetchingError());
-      console.error(e);
+    }
+  };
+
+  const filterByName = async (title) => {
+    dispatch(postsFetching());
+    try {
+      const encodedString = title.replace(/ /g, '%20');
+      const resp = await request(`https://jsonplaceholder.typicode.com/posts?title=${encodedString}`);
+      dispatch(postsFetched(resp));
+    } catch (e) {
+      dispatch(postsFetchingError());
     }
   };
 
   return {
     getAllPosts,
+    filterByName,
   };
 }
 

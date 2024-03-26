@@ -1,5 +1,7 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { updateSearchData } from './subHeaderSlice';
 
 import search from '../../assets/icons/search.svg';
 
@@ -37,13 +39,30 @@ const SubHeaderWrapper = styled.section`
 `;
 
 function SubHeader() {
+  const dispatch = useDispatch();
+
+  const onSearchDataChange = (value) => {
+    dispatch(updateSearchData(value));
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      dispatch(updateSearchData(e.target.value));
+    }
+  };
+
   return (
     <SubHeaderWrapper>
       <p>
         Здесь мы делимся интересными кейсами из наших проектов,
         пишем про IT, а также переводим зарубежные статьи
       </p>
-      <input type="text" placeholder="Поиск по названию статьи" />
+      <input
+        onChange={(e) => onSearchDataChange(e.target.value)}
+        onKeyDown={handleKeyDown}
+        type="text"
+        placeholder="Поиск по названию статьи"
+      />
     </SubHeaderWrapper>
   );
 }

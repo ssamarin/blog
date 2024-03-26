@@ -3,7 +3,6 @@ import React from 'react';
 import Header from '../Components/Header';
 import SubHeader from '../Components/SubHeader';
 import PostList from '../Components/PostList';
-import Pagination from '../Components/Pagination';
 
 function MainPage() {
   return (
@@ -12,7 +11,6 @@ function MainPage() {
       <main>
         <SubHeader />
         <PostList />
-        <Pagination />
       </main>
     </>
   );

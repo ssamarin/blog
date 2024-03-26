@@ -5,6 +5,7 @@ import usePostsService from '../../services/PostsService';
 
 import Post from '../Post';
 import FullWidthPost from '../FullWidthPost';
+import Pagination from '../Pagination';
 import Spinner from '../Spinner';
 
 const PostListWrapper = styled.div`
@@ -18,6 +19,7 @@ function PostList() {
   const posts = useSelector((state) => state.postsList.posts);
   const offset = useSelector((state) => state.postsList.offset);
   const postsLoadingStatus = useSelector((state) => state.postsList.postsLoadingStatus);
+  const searchData = useSelector((state) => state.subHeader.searchData);
 
   const memoizedGetAllPosts = useMemo(() => getAllPosts, [getAllPosts]);
 
@@ -25,20 +27,43 @@ function PostList() {
     memoizedGetAllPosts();
   }, [offset]);
 
+  const searchPosts = (search) => {
+    if (search.length === 0) {
+      return posts;
+    }
+    const pageSearchingPosts = posts.filter(
+      (post) => post.title.indexOf(search) > -1,
+    );
+    return pageSearchingPosts;
+  };
+
+  useEffect(() => {
+    searchPosts(searchData);
+  }, [searchData]);
+
+  const visiblePosts = searchPosts(searchData);
+
+  if (visiblePosts.length === 0) {
+    return <div className="empty">Посты не найдены</div>;
+  }
+
   if (postsLoadingStatus === 'loading') {
     return <Spinner />;
   }
 
   return (
-    <PostListWrapper>
-      {posts.map(({ id, title, body }, index) => (
-        index === 0 ? (
-          <FullWidthPost key={id} id={id} title={title} body={body} />
-        ) : (
-          <Post key={id} id={id} title={title} body={body} />
-        )
-      ))}
-    </PostListWrapper>
+    <>
+      <PostListWrapper>
+        {visiblePosts.map(({ id, title, body }, index) => (
+          index === 0 ? (
+            <FullWidthPost key={id} id={id} title={title} body={body} />
+          ) : (
+            <Post key={id} id={id} title={title} body={body} />
+          )
+        ))}
+      </PostListWrapper>
+      <Pagination />
+    </>
   );
 }
 
