@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { productDeleted } from '../PostList/postListSlice';
 
 import cat from '../../assets/img/cat.jpg';
 
+import remove from '../../assets/icons/remove.svg';
 import likeActive from '../../assets/icons/likeActive.svg';
 import dislike from '../../assets/icons/dislike.svg';
 
 const PostWrapper = styled.div`
-grid-column: 1 / -1;
+  grid-column: 1 / -1;
+  position: relative;
   width: 100%;
   height: 770px;
   border: 1px solid #f4f4f4;
@@ -28,6 +32,20 @@ grid-column: 1 / -1;
       0 0 5px 0 rgb(0 0 0 / 10%),
       0 8px 16px 0 rgb(0 0 0 / 10%),
       0 16px 32px 0 rgb(0 0 0 / 10%);
+  }
+
+  .remove {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+
+    img {
+      width: 30px;
+      height: 30px;
+    }
   }
 
   img {
@@ -114,11 +132,24 @@ grid-column: 1 / -1;
 `;
 
 function FullWidthPost({ title, body, id }) {
+  const dispatch = useDispatch();
   const [countOfLike] = useState(Math.round(Math.random() * 50));
   const [countOfDisslike] = useState(Math.round(Math.random() * 50));
 
+  const onPostDeleted = (key) => {
+    dispatch(productDeleted(key));
+  };
+
   return (
     <PostWrapper>
+      <button
+        onClick={() => onPostDeleted(id)}
+        aria-label="remove product"
+        type="button"
+        className="remove"
+      >
+        <img src={remove} alt="remove product" />
+      </button>
       <img src={cat} alt="cat" />
       <div className="text">
         <div className="postHeader">

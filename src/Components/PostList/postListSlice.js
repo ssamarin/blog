@@ -21,6 +21,9 @@ const postsList = createSlice({
     setOffset: (state, action) => { state.offset += action.payload; },
     setCountOfPage: (state, action) => { state.countOfPage += action.payload; },
     setLimit: (state, action) => { state.limit += action.payload; },
+    productDeleted: (state, action) => {
+      state.posts = state.posts.filter((product) => product.id !== action.payload);
+    },
   },
 });
 
@@ -34,4 +37,5 @@ export const {
   setOffset,
   setCountOfPage,
   setLimit,
+  productDeleted,
 } = actions;
