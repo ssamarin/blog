@@ -28,12 +28,17 @@ const PaginationWrapper = styled.div`
 function Pagination() {
   const dispatch = useDispatch();
   const countOfPage = useSelector((state) => state.postsList.countOfPage);
+  const postsLoadingStatus = useSelector((state) => state.postsList.postsLoadingStatus);
 
   const changePage = (num, offset) => {
     dispatch(setCountOfPage(num));
     dispatch(setOffset(offset));
     dispatch(setLimit(offset));
   };
+
+  if (postsLoadingStatus === 'loading') {
+    return null;
+  }
 
   return (
     <PaginationWrapper>

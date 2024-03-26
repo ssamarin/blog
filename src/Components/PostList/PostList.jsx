@@ -5,6 +5,7 @@ import usePostsService from '../../services/PostsService';
 
 import Post from '../Post';
 import FullWidthPost from '../FullWidthPost';
+import Spinner from '../Spinner';
 
 const PostListWrapper = styled.div`
   display: grid;
@@ -16,10 +17,15 @@ function PostList() {
   const { getAllPosts } = usePostsService();
   const posts = useSelector((state) => state.postsList.posts);
   const offset = useSelector((state) => state.postsList.offset);
+  const postsLoadingStatus = useSelector((state) => state.postsList.postsLoadingStatus);
 
   useEffect(() => {
     getAllPosts();
   }, [offset]);
+
+  if (postsLoadingStatus === 'loading') {
+    return <Spinner />;
+  }
 
   return (
     <PostListWrapper>
