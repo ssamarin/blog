@@ -43,7 +43,7 @@ function PostList() {
 
   const visiblePosts = searchPosts(searchData);
 
-  if (visiblePosts.length === 0) {
+  if (visiblePosts.length === 0 && postsLoadingStatus !== 'loading') {
     return <div className="empty">Посты не найдены</div>;
   }
 
