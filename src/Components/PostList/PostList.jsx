@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import usePostsService from '../../services/PostsService';
@@ -19,8 +19,10 @@ function PostList() {
   const offset = useSelector((state) => state.postsList.offset);
   const postsLoadingStatus = useSelector((state) => state.postsList.postsLoadingStatus);
 
+  const memoizedGetAllPosts = useMemo(() => getAllPosts, [getAllPosts]);
+
   useEffect(() => {
-    getAllPosts();
+    memoizedGetAllPosts();
   }, [offset]);
 
   if (postsLoadingStatus === 'loading') {
