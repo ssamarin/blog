@@ -29,8 +29,9 @@ const SubHeaderWrapper = styled.section`
 
     &:active,
     &:focus {
-      background-color: #e8f0fe;
-      border-color: #4285f4;
+      outline: none;
+      background-color: #f2f2f2;
+      border-color: #999;
     }
   }
 `;

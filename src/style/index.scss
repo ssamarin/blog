@@ -104,3 +104,7 @@ a {
   width: 1140px;
   margin: 0 auto;
 }
+
+.full-width {
+  grid-column: 1 / -1;
+}
