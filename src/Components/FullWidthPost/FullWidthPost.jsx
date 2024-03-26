@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -112,7 +113,7 @@ grid-column: 1 / -1;
   }
 `;
 
-function FullWidthPost({ title, body }) {
+function FullWidthPost({ title, body, id }) {
   const [countOfLike] = useState(Math.round(Math.random() * 50));
   const [countOfDisslike] = useState(Math.round(Math.random() * 50));
 
@@ -146,7 +147,12 @@ function FullWidthPost({ title, body }) {
         <div className="descr">
           {`${body.slice(0, 80)}...`}
         </div>
-        <div className="btns">
+        <NavLink
+          to={`/post/:${id}`}
+          state={{
+            body, title, countOfLike, countOfDisslike,
+          }}
+        >
           <button
             type="button"
             aria-label="learn more"
@@ -154,7 +160,7 @@ function FullWidthPost({ title, body }) {
           >
             Читать далее
           </button>
-        </div>
+        </NavLink>
       </div>
     </PostWrapper>
   );
@@ -163,6 +169,7 @@ function FullWidthPost({ title, body }) {
 FullWidthPost.propTypes = {
   title: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
 };
 
 export default FullWidthPost;

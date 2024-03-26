@@ -33,9 +33,9 @@ function PostList() {
     <PostListWrapper>
       {posts.map(({ id, title, body }, index) => (
         index === 0 ? (
-          <FullWidthPost key={id} title={title} body={body} />
+          <FullWidthPost key={id} id={id} title={title} body={body} />
         ) : (
-          <Post key={id} title={title} />
+          <Post key={id} id={id} title={title} body={body} />
         )
       ))}
     </PostListWrapper>

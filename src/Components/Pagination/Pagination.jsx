@@ -21,6 +21,7 @@ const PaginationWrapper = styled.div`
 
     img {
       width: 20px;
+      height: 20px;
     }
   }
 `;
@@ -54,7 +55,9 @@ function Pagination() {
       {' '}
       <div>{countOfPage}</div>
       {' '}
-      <span>из 20</span>
+      <span>из</span>
+      {' '}
+      <span>20</span>
       <button
         onClick={() => changePage(1, 5)}
         type="button"

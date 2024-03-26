@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -101,7 +102,7 @@ const PostWrapper = styled.div`
   }
 `;
 
-function Post({ title }) {
+function Post({ title, id, body }) {
   const [countOfLike] = useState(Math.round(Math.random() * 50));
   const [countOfDisslike] = useState(Math.round(Math.random() * 50));
 
@@ -131,13 +132,20 @@ function Post({ title }) {
               <div>{countOfDisslike}</div>
             </div>
           </div>
-          <button
-            type="button"
-            aria-label="learn more"
-            className="learnMore"
+          <NavLink
+            to={`/post/:${id}`}
+            state={{
+              body, title, countOfLike, countOfDisslike,
+            }}
           >
-            Читать далее
-          </button>
+            <button
+              type="button"
+              aria-label="learn more"
+              className="learnMore"
+            >
+              Читать далее
+            </button>
+          </NavLink>
         </div>
       </div>
     </PostWrapper>
@@ -146,6 +154,8 @@ function Post({ title }) {
 
 Post.propTypes = {
   title: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  body: PropTypes.string.isRequired,
 };
 
 export default Post;
