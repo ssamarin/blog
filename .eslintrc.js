@@ -28,5 +28,6 @@ module.exports = {
     'import/no-extraneous-dependencies': 'off',
     'no-confusing-arrow': 'off',
     'no-mixed-operators': 'off',
+    'jsx-a11y/anchor-is-valid': 'off',
   },
 };
