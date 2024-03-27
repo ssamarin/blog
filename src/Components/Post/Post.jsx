@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { reactionAdded, reactionRemoved } from '../Elements/Reactions/reactionsSlice';
 import { productDeleted } from '../PostList/postListSlice';
 
 import cat from '../../assets/img/cat.jpg';
 import remove from '../../assets/icons/remove.svg';
+import like from '../../assets/icons/like.svg';
 import likeActive from '../../assets/icons/likeActive.svg';
 import dislike from '../../assets/icons/dislike.svg';
+import dislikeActive from '../../assets/icons/dislikeActive.svg';
 
 const PostWrapper = styled.div`
   width: 558px;
@@ -66,54 +69,54 @@ const PostWrapper = styled.div`
     .btns {
       display: flex;
       justify-content: space-between;
+    }
 
-      .reactions {
+    .reactions {
+      display: flex;
+      column-gap: 24px;
+  
+      .reaction__count {
         display: flex;
-        column-gap: 24px;
-
-        .reaction__count {
-          display: flex;
-          align-items: center;
-          column-gap: 8px;
-
-          p {
-            color: #4f4f4f;
-            font-size: 16px;
-            line-height: 112%;
-          }
-
-          button {
-            width: 32px;
-            height: 32px;
-            background-color: transparent;
-          }
-
-          img {
-            width: 32px;
-            height: 32px;
-          }
+        align-items: center;
+        column-gap: 8px;
+  
+        p {
+          color: #4f4f4f;
+          font-size: 16px;
+          line-height: 112%;
+        }
+  
+        button {
+          width: 32px;
+          height: 32px;
+          background-color: transparent;
+        }
+  
+        img {
+          width: 32px;
+          height: 32px;
         }
       }
+    }
 
-      .learnMore {
-        width: 150px;
-        height: 45px;
-        color: #0a0a0a;
-        font-size: 15px;
-        background-color: #fff;
-        border: 2px solid #0a0a0a;
-        border-radius: 60px;
-        transition: all 0.3s ease;
-
-        &:hover {
-          color: #fff;
-          background-color: #0a0a0a;
-        }
-
-        &:active {
-          box-shadow: 0 0 5px rgb(0 0 0 / 30%);
-          transform: translateY(2px);
-        }
+    .learnMore {
+      width: 150px;
+      height: 45px;
+      color: #0a0a0a;
+      font-size: 15px;
+      background-color: #fff;
+      border: 2px solid #0a0a0a;
+      border-radius: 60px;
+      transition: all 0.3s ease;
+  
+      &:hover {
+        color: #fff;
+        background-color: #0a0a0a;
+      }
+  
+      &:active {
+        box-shadow: 0 0 5px rgb(0 0 0 / 30%);
+        transform: translateY(2px);
       }
     }
   }
@@ -121,8 +124,66 @@ const PostWrapper = styled.div`
 
 function Post({ title, id, body }) {
   const dispatch = useDispatch();
-  const [countOfLike] = useState(Math.round(Math.random() * 50));
-  const [countOfDisslike] = useState(Math.round(Math.random() * 50));
+  const postsWithReactions = useSelector((state) => state.reactions.postsWithReactions);
+
+  const [countOfLike, setCountOfLike] = useState(Math.round(Math.random() * 50));
+  const [countOfDislike, setCountOfDislike] = useState(Math.round(Math.random() * 50));
+  const [isLikeActive, setIsLikeActive] = useState(false);
+  const [isDislikeActive, setIsDislikeActive] = useState(false);
+
+  useEffect(() => {
+    const reaction = postsWithReactions.find((react) => react.id === id);
+    if (reaction) {
+      setCountOfLike(reaction.countOfLike);
+      setCountOfDislike(reaction.countOfDislike);
+      setIsLikeActive(reaction.likeStatus);
+      setIsDislikeActive(reaction.disLikeStatus);
+    }
+  }, [id, postsWithReactions]);
+
+  const toggleLike = () => {
+    const newLikeStatus = !isLikeActive;
+    setIsLikeActive(newLikeStatus);
+    setIsDislikeActive(false);
+    const newCountOfLike = newLikeStatus ? countOfLike + 1 : countOfLike - 1;
+    setCountOfLike(newCountOfLike);
+    if (id) {
+      dispatch(reactionRemoved(id));
+    }
+    if (newLikeStatus || isDislikeActive) {
+      dispatch(
+        reactionAdded({
+          id,
+          likeStatus: newLikeStatus,
+          disLikeStatus: isDislikeActive,
+          countOfLike: newCountOfLike,
+          countOfDislike,
+        }),
+      );
+    }
+  };
+
+  const toggleDislike = () => {
+    const newDislikeStatus = !isDislikeActive;
+    setIsDislikeActive(newDislikeStatus);
+    setIsLikeActive(false);
+    const newCountOfDislike = newDislikeStatus ? countOfDislike + 1 : countOfDislike - 1;
+    setCountOfDislike(newCountOfDislike);
+    if (id) {
+      dispatch(reactionRemoved(id));
+    }
+    if (newDislikeStatus || isLikeActive) {
+      dispatch(
+        reactionAdded({
+          id,
+          likeStatus: isLikeActive,
+          disLikeStatus: newDislikeStatus,
+          countOfLike,
+          countOfDislike: newCountOfDislike,
+        }),
+      );
+    }
+  };
 
   const onPostDeleted = (key) => {
     dispatch(productDeleted(key));
@@ -147,8 +208,9 @@ function Post({ title, id, body }) {
               <button
                 type="button"
                 aria-label="add like"
+                onClick={() => toggleLike()}
               >
-                <img src={likeActive} alt="like" />
+                <img src={isLikeActive ? likeActive : like} alt="like" />
               </button>
               <p>{countOfLike}</p>
             </div>
@@ -156,16 +218,23 @@ function Post({ title, id, body }) {
               <button
                 type="button"
                 aria-label="add dislike"
+                onClick={() => toggleDislike()}
               >
-                <img src={dislike} alt="dislike" />
+                <img src={isDislikeActive ? dislikeActive : dislike} alt="dislike" />
               </button>
-              <div>{countOfDisslike}</div>
+              <div>{countOfDislike}</div>
             </div>
           </div>
           <NavLink
             to={`/post/:${id}`}
             state={{
-              body, title, countOfLike, countOfDisslike,
+              body,
+              title,
+              id,
+              likes: countOfLike,
+              dislikes: countOfDislike,
+              likeStatus: isLikeActive,
+              dislikeStatus: isDislikeActive,
             }}
           >
             <button

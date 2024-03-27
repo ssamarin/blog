@@ -29,5 +29,7 @@ module.exports = {
     'no-confusing-arrow': 'off',
     'no-mixed-operators': 'off',
     'jsx-a11y/anchor-is-valid': 'off',
+    'react/jsx-no-constructed-context-values': 'off',
+    'react/prop-types': 'off',
   },
 };

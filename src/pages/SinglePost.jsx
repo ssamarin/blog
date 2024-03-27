@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import { reactionRemoved, reactionAdded } from '../Components/Elements/Reactions/reactionsSlice';
 
-import likeActive from '../assets/icons/likeActive.svg';
-import dislike from '../assets/icons/dislike.svg';
 import back from '../assets/icons/back.svg';
 import cat from '../assets/img/cat.jpg';
+import like from '../assets/icons/like.svg';
+import likeActive from '../assets/icons/likeActive.svg';
+import dislike from '../assets/icons/dislike.svg';
+import dislikeActive from '../assets/icons/dislikeActive.svg';
 
 const SinglePostWrapper = styled.section`
   padding: 80px 0 64px;
@@ -90,9 +94,62 @@ function SinglePost() {
   const {
     body,
     title,
-    countOfLike,
-    countOfDisslike,
+    id,
+    likes,
+    dislikes,
+    likeStatus,
+    dislikeStatus,
   } = location.state;
+
+  const dispatch = useDispatch();
+  const [countOfLike, setCountOfLike] = useState(likes);
+  const [countOfDislike, setCountOfDislike] = useState(dislikes);
+  const [isLikeActive, setIsLikeActive] = useState(likeStatus);
+  const [isDislikeActive, setIsDislikeActive] = useState(dislikeStatus);
+
+  const toggleLike = () => {
+    const newLikeStatus = !isLikeActive;
+    setIsLikeActive(newLikeStatus);
+    setIsDislikeActive(false);
+    const newCountOfLike = newLikeStatus ? countOfLike + 1 : countOfLike - 1;
+    setCountOfLike(newCountOfLike);
+    if (id) {
+      dispatch(reactionRemoved(id));
+    }
+    if (newLikeStatus || isDislikeActive) {
+      dispatch(
+        reactionAdded({
+          id,
+          likeStatus: newLikeStatus,
+          disLikeStatus: isDislikeActive,
+          countOfLike: newCountOfLike,
+          countOfDislike,
+        }),
+      );
+    }
+  };
+
+  const toggleDislike = () => {
+    const newDislikeStatus = !isDislikeActive;
+    setIsDislikeActive(newDislikeStatus);
+    setIsLikeActive(false);
+    const newCountOfDislike = newDislikeStatus ? countOfDislike + 1 : countOfDislike - 1;
+    setCountOfDislike(newCountOfDislike);
+    if (id) {
+      dispatch(reactionRemoved(id));
+    }
+    if (newDislikeStatus || isLikeActive) {
+      dispatch(
+        reactionAdded({
+          id,
+          likeStatus: isLikeActive,
+          disLikeStatus: newDislikeStatus,
+          countOfLike,
+          countOfDislike: newCountOfDislike,
+        }),
+      );
+    }
+  };
 
   return (
     <SinglePostWrapper>
@@ -106,8 +163,9 @@ function SinglePost() {
             <button
               type="button"
               aria-label="add like"
+              onClick={() => toggleLike()}
             >
-              <img src={likeActive} alt="like" />
+              <img src={isLikeActive ? likeActive : like} alt="like" />
             </button>
             <p>{countOfLike}</p>
           </div>
@@ -115,10 +173,11 @@ function SinglePost() {
             <button
               type="button"
               aria-label="add dislike"
+              onClick={() => toggleDislike()}
             >
-              <img src={dislike} alt="dislike" />
+              <img src={isDislikeActive ? dislikeActive : dislike} alt="dislike" />
             </button>
-            <div>{countOfDisslike}</div>
+            <div>{countOfDislike}</div>
           </div>
         </div>
       </header>

@@ -12,7 +12,6 @@ const HeaderWrapper = styled.header`
     font-size: 60px;
     line-height: 113%;
     text-align: center;
-    cursor: pointer;
     transition: transform 0.6s ease;
 
     &::before {

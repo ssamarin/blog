@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
-import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { productDeleted } from '../PostList/postListSlice';
 
-import cat from '../../assets/img/cat.jpg';
+import Reactions from '../Elements/Reactions';
+import Button from '../Elements/Button';
 
+import cat from '../../assets/img/cat.jpg';
 import remove from '../../assets/icons/remove.svg';
-import likeActive from '../../assets/icons/likeActive.svg';
-import dislike from '../../assets/icons/dislike.svg';
 
 const PostWrapper = styled.div`
   grid-column: 1 / -1;
@@ -69,34 +68,6 @@ const PostWrapper = styled.div`
         font-size: 28px;
         line-height: 114%;
       }
-
-      .reactions {
-        display: flex;
-        column-gap: 24px;
-
-        .reaction__count {
-          display: flex;
-          align-items: center;
-          column-gap: 8px;
-
-          p {
-            color: #4f4f4f;
-            font-size: 16px;
-            line-height: 112%;
-          }
-
-          button {
-            width: 32px;
-            height: 32px;
-            background-color: transparent;
-          }
-
-          img {
-            width: 32px;
-            height: 32px;
-          }
-        }
-      }
     }
 
     .descr {
@@ -109,32 +80,12 @@ const PostWrapper = styled.div`
 
     .learnMore {
       float: right;
-      width: 150px;
-      height: 45px;
-      color: #0a0a0a;
-      font-size: 15px;
-      background-color: #fff;
-      border: 2px solid #0a0a0a;
-      border-radius: 60px;
-      transition: all 0.3s ease;
-
-      &:hover {
-        color: #fff;
-        background-color: #0a0a0a;
-      }
-
-      &:active {
-        box-shadow: 0 0 5px rgb(0 0 0 / 30%);
-        transform: translateY(2px);
-      }
     }
   }
 `;
 
 function FullWidthPost({ title, body, id }) {
   const dispatch = useDispatch();
-  const [countOfLike] = useState(Math.round(Math.random() * 50));
-  const [countOfDisslike] = useState(Math.round(Math.random() * 50));
 
   const onPostDeleted = (key) => {
     dispatch(productDeleted(key));
@@ -154,44 +105,12 @@ function FullWidthPost({ title, body, id }) {
       <div className="text">
         <div className="postHeader">
           <h2>{`${title.slice(0, 30)}...`}</h2>
-          <div className="reactions">
-            <div className="reaction__count">
-              <button
-                type="button"
-                aria-label="add like"
-              >
-                <img src={likeActive} alt="like" />
-              </button>
-              <p>{countOfLike}</p>
-            </div>
-            <div className="reaction__count">
-              <button
-                type="button"
-                aria-label="add dislike"
-              >
-                <img src={dislike} alt="dislike" />
-              </button>
-              <div>{countOfDisslike}</div>
-            </div>
-          </div>
+          <Reactions {...{ id }} />
         </div>
         <div className="descr">
           {`${body.slice(0, 80)}...`}
         </div>
-        <NavLink
-          to={`/post/:${id}`}
-          state={{
-            body, title, countOfLike, countOfDisslike,
-          }}
-        >
-          <button
-            type="button"
-            aria-label="learn more"
-            className="learnMore"
-          >
-            Читать далее
-          </button>
-        </NavLink>
+        <Button {...{ title, body, id }} />
       </div>
     </PostWrapper>
   );
