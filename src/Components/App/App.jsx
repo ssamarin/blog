@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import Spinner from '../Spinner';
 import MainPage from '../../pages/MainPage';
-import SinglePost from '../../pages/SinglePost';
+import PostPage from '../../pages/PostPage';
 import Page404 from '../../pages/Page404';
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="*" element={<Page404 />} />
-          <Route path="/post/:id" element={<SinglePost />} />
+          <Route path="/post/:id" element={<PostPage />} />
         </Routes>
       </div>
     </Router>

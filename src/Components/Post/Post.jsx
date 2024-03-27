@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+
 import { reactionAdded, reactionRemoved } from '../Elements/Reactions/reactionsSlice';
 import { productDeleted } from '../PostList/postListSlice';
 
@@ -126,18 +127,30 @@ function Post({ title, id, body }) {
   const dispatch = useDispatch();
   const postsWithReactions = useSelector((state) => state.reactions.postsWithReactions);
 
-  const [countOfLike, setCountOfLike] = useState(Math.round(Math.random() * 50));
-  const [countOfDislike, setCountOfDislike] = useState(Math.round(Math.random() * 50));
-  const [isLikeActive, setIsLikeActive] = useState(false);
-  const [isDislikeActive, setIsDislikeActive] = useState(false);
+  const [reactions, setReactions] = useState({
+    countOfLike: Math.round(Math.random() * 50),
+    countOfDislike: Math.round(Math.random() * 50),
+    isLikeActive: false,
+    isDislikeActive: false,
+  });
+
+  const {
+    countOfLike,
+    countOfDislike,
+    isLikeActive,
+    isDislikeActive,
+  } = reactions;
 
   useEffect(() => {
     const reaction = postsWithReactions.find((react) => react.id === id);
     if (reaction) {
-      setCountOfLike(reaction.countOfLike);
-      setCountOfDislike(reaction.countOfDislike);
-      setIsLikeActive(reaction.likeStatus);
-      setIsDislikeActive(reaction.disLikeStatus);
+      setReactions({
+        ...reactions,
+        countOfLike: reaction.countOfLike,
+        countOfDislike: reaction.countOfDislike,
+        isLikeActive: reaction.likeStatus,
+        isDislikeActive: reaction.disLikeStatus,
+      });
     }
   }, [id, postsWithReactions]);
 
@@ -156,8 +169,13 @@ function Post({ title, id, body }) {
       newCountOfLike -= 1;
     }
 
-    setIsLikeActive(newLikeStatus);
-    setIsDislikeActive(newDislikeStatus);
+    setReactions({
+      ...reactions,
+      countOfLike: newCountOfLike,
+      countOfDislike: newCountOfDislike,
+      isLikeActive: newLikeStatus,
+      isDislikeActive: newDislikeStatus,
+    });
 
     dispatch(reactionRemoved(id));
     dispatch(
@@ -186,8 +204,13 @@ function Post({ title, id, body }) {
       newCountOfDislike -= 1;
     }
 
-    setIsDislikeActive(newDislikeStatus);
-    setIsLikeActive(newLikeStatus);
+    setReactions({
+      ...reactions,
+      countOfLike: newCountOfLike,
+      countOfDislike: newCountOfDislike,
+      isLikeActive: newLikeStatus,
+      isDislikeActive: newDislikeStatus,
+    });
 
     dispatch(reactionRemoved(id));
     dispatch(
@@ -247,10 +270,6 @@ function Post({ title, id, body }) {
               body,
               title,
               id,
-              likes: countOfLike,
-              dislikes: countOfDislike,
-              likeStatus: isLikeActive,
-              dislikeStatus: isDislikeActive,
             }}
           >
             <button

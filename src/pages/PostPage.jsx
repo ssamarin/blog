@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { reactionRemoved, reactionAdded } from '../Components/Elements/Reactions/reactionsSlice';
 
@@ -95,60 +95,106 @@ function SinglePost() {
     body,
     title,
     id,
-    likes,
-    dislikes,
-    likeStatus,
-    dislikeStatus,
   } = location.state;
 
   const dispatch = useDispatch();
-  const [countOfLike, setCountOfLike] = useState(likes);
-  const [countOfDislike, setCountOfDislike] = useState(dislikes);
-  const [isLikeActive, setIsLikeActive] = useState(likeStatus);
-  const [isDislikeActive, setIsDislikeActive] = useState(dislikeStatus);
+  const postsWithReactions = useSelector((state) => state.reactions.postsWithReactions);
+
+  const [reactions, setReactions] = useState({
+    countOfLike: Math.round(Math.random() * 50),
+    countOfDislike: Math.round(Math.random() * 50),
+    isLikeActive: false,
+    isDislikeActive: false,
+  });
+
+  const {
+    countOfLike,
+    countOfDislike,
+    isLikeActive,
+    isDislikeActive,
+  } = reactions;
+
+  useEffect(() => {
+    const reaction = postsWithReactions.find((react) => react.id === id);
+    if (reaction) {
+      setReactions({
+        ...reactions,
+        countOfLike: reaction.countOfLike,
+        countOfDislike: reaction.countOfDislike,
+        isLikeActive: reaction.likeStatus,
+        isDislikeActive: reaction.disLikeStatus,
+      });
+    }
+  }, [id, postsWithReactions]);
 
   const toggleLike = () => {
     const newLikeStatus = !isLikeActive;
-    setIsLikeActive(newLikeStatus);
-    setIsDislikeActive(false);
-    const newCountOfLike = newLikeStatus ? countOfLike + 1 : countOfLike - 1;
-    setCountOfLike(newCountOfLike);
-    if (id) {
-      dispatch(reactionRemoved(id));
+    const newDislikeStatus = false;
+    let newCountOfLike = countOfLike;
+    let newCountOfDislike = countOfDislike;
+
+    if (!isLikeActive && newLikeStatus) {
+      newCountOfLike += 1;
+      if (isDislikeActive) {
+        newCountOfDislike -= 1;
+      }
+    } else if (isLikeActive && !newLikeStatus) {
+      newCountOfLike -= 1;
     }
-    if (newLikeStatus || isDislikeActive) {
-      dispatch(
-        reactionAdded({
-          id,
-          likeStatus: newLikeStatus,
-          disLikeStatus: isDislikeActive,
-          countOfLike: newCountOfLike,
-          countOfDislike,
-        }),
-      );
-    }
+
+    setReactions({
+      ...reactions,
+      countOfLike: newCountOfLike,
+      countOfDislike: newCountOfDislike,
+      isLikeActive: newLikeStatus,
+      isDislikeActive: newDislikeStatus,
+    });
+
+    dispatch(reactionRemoved(id));
+    dispatch(
+      reactionAdded({
+        id,
+        likeStatus: newLikeStatus,
+        disLikeStatus: newDislikeStatus,
+        countOfLike: newCountOfLike,
+        countOfDislike: newCountOfDislike,
+      }),
+    );
   };
 
   const toggleDislike = () => {
     const newDislikeStatus = !isDislikeActive;
-    setIsDislikeActive(newDislikeStatus);
-    setIsLikeActive(false);
-    const newCountOfDislike = newDislikeStatus ? countOfDislike + 1 : countOfDislike - 1;
-    setCountOfDislike(newCountOfDislike);
-    if (id) {
-      dispatch(reactionRemoved(id));
+    const newLikeStatus = false;
+    let newCountOfDislike = countOfDislike;
+    let newCountOfLike = countOfLike;
+
+    if (!isDislikeActive && newDislikeStatus) {
+      newCountOfDislike += 1;
+      if (isLikeActive) {
+        newCountOfLike -= 1;
+      }
+    } else if (isDislikeActive && !newDislikeStatus) {
+      newCountOfDislike -= 1;
     }
-    if (newDislikeStatus || isLikeActive) {
-      dispatch(
-        reactionAdded({
-          id,
-          likeStatus: isLikeActive,
-          disLikeStatus: newDislikeStatus,
-          countOfLike,
-          countOfDislike: newCountOfDislike,
-        }),
-      );
-    }
+
+    setReactions({
+      ...reactions,
+      countOfLike: newCountOfLike,
+      countOfDislike: newCountOfDislike,
+      isLikeActive: newLikeStatus,
+      isDislikeActive: newDislikeStatus,
+    });
+
+    dispatch(reactionRemoved(id));
+    dispatch(
+      reactionAdded({
+        id,
+        likeStatus: newLikeStatus,
+        disLikeStatus: newDislikeStatus,
+        countOfLike: newCountOfLike,
+        countOfDislike: newCountOfDislike,
+      }),
+    );
   };
 
   return (
