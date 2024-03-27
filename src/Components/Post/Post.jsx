@@ -143,46 +143,62 @@ function Post({ title, id, body }) {
 
   const toggleLike = () => {
     const newLikeStatus = !isLikeActive;
+    const newDislikeStatus = false;
+    let newCountOfLike = countOfLike;
+    let newCountOfDislike = countOfDislike;
+
+    if (!isLikeActive && newLikeStatus) {
+      newCountOfLike += 1;
+      if (isDislikeActive) {
+        newCountOfDislike -= 1;
+      }
+    } else if (isLikeActive && !newLikeStatus) {
+      newCountOfLike -= 1;
+    }
+
     setIsLikeActive(newLikeStatus);
-    setIsDislikeActive(false);
-    const newCountOfLike = newLikeStatus ? countOfLike + 1 : countOfLike - 1;
-    setCountOfLike(newCountOfLike);
-    if (id) {
-      dispatch(reactionRemoved(id));
-    }
-    if (newLikeStatus || isDislikeActive) {
-      dispatch(
-        reactionAdded({
-          id,
-          likeStatus: newLikeStatus,
-          disLikeStatus: isDislikeActive,
-          countOfLike: newCountOfLike,
-          countOfDislike,
-        }),
-      );
-    }
+    setIsDislikeActive(newDislikeStatus);
+
+    dispatch(reactionRemoved(id));
+    dispatch(
+      reactionAdded({
+        id,
+        likeStatus: newLikeStatus,
+        disLikeStatus: newDislikeStatus,
+        countOfLike: newCountOfLike,
+        countOfDislike: newCountOfDislike,
+      }),
+    );
   };
 
   const toggleDislike = () => {
     const newDislikeStatus = !isDislikeActive;
+    const newLikeStatus = false;
+    let newCountOfDislike = countOfDislike;
+    let newCountOfLike = countOfLike;
+
+    if (!isDislikeActive && newDislikeStatus) {
+      newCountOfDislike += 1;
+      if (isLikeActive) {
+        newCountOfLike -= 1;
+      }
+    } else if (isDislikeActive && !newDislikeStatus) {
+      newCountOfDislike -= 1;
+    }
+
     setIsDislikeActive(newDislikeStatus);
-    setIsLikeActive(false);
-    const newCountOfDislike = newDislikeStatus ? countOfDislike + 1 : countOfDislike - 1;
-    setCountOfDislike(newCountOfDislike);
-    if (id) {
-      dispatch(reactionRemoved(id));
-    }
-    if (newDislikeStatus || isLikeActive) {
-      dispatch(
-        reactionAdded({
-          id,
-          likeStatus: isLikeActive,
-          disLikeStatus: newDislikeStatus,
-          countOfLike,
-          countOfDislike: newCountOfDislike,
-        }),
-      );
-    }
+    setIsLikeActive(newLikeStatus);
+
+    dispatch(reactionRemoved(id));
+    dispatch(
+      reactionAdded({
+        id,
+        likeStatus: newLikeStatus,
+        disLikeStatus: newDislikeStatus,
+        countOfLike: newCountOfLike,
+        countOfDislike: newCountOfDislike,
+      }),
+    );
   };
 
   const onPostDeleted = (key) => {
