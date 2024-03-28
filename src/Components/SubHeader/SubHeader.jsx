@@ -85,14 +85,14 @@ function SubHeader() {
       <input
         onChange={(e) => onSearchDataChange(e.target.value)}
         type="text"
-        disabled={dbSearchData.length > 1}
+        disabled={dbSearchData.length > 0}
         placeholder="Поиск по странице"
       />
       <input
         onBlur={(e) => onDbSearchDataChange(e.target.value)}
         type="text"
         onKeyDown={handleKeyDown}
-        disabled={searchData.length > 1}
+        disabled={searchData.length > 0}
         placeholder="Серверный поиск"
       />
     </SubHeaderWrapper>
