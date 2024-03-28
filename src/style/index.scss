@@ -103,6 +103,10 @@ a {
 .app {
   width: 1140px;
   margin: 0 auto;
+
+  @media (width <= 1140px) {
+    width: 100%;
+  }
 }
 
 .full-width {

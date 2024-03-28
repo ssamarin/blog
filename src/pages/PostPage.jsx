@@ -55,6 +55,16 @@ const SinglePostWrapper = styled.section`
       font-size: 18px;
       line-height: 144%;
     }
+
+  @media (width <= 1240px) {
+    header {
+      padding: 0 25px;
+    }
+
+    p {
+      text-align: center;
+    }
+  }
 `;
 
 function SinglePost() {

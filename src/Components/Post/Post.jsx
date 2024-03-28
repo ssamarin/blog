@@ -34,6 +34,29 @@ const PostWrapper = styled.div`
       justify-content: space-between;
     }
   }
+
+  @media (width <= 1240px) {
+    margin: 0 auto;
+    width: 90%;
+    height: 100%;
+    
+    img {
+      width: 100%;
+      height: 473px;
+    }
+
+    button {
+      margin-bottom: 15px;
+    }
+  }
+
+
+  @media (width <= 768px) {
+    img {
+      width: 100%;
+      height: 273px;
+    }
+  }
 `;
 
 function Post({ title, id, body }) {
