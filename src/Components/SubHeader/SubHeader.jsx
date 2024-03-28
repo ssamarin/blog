@@ -36,6 +36,19 @@ const SubHeaderWrapper = styled.section`
       border-color: #999;
     }
   }
+
+
+  @media (width <= 1240px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    input,
+    p {
+      width: 90%;
+    }
+  }
 `;
 
 function SubHeader() {

@@ -9,7 +9,7 @@ import Button from '../Elements/Button';
 import cat from '../../assets/img/cat.jpg';
 
 const PostWrapper = styled.div`
-  grid-column: 1 / -1;
+  grid-column: -1 / 1;
   width: 100%;
   height: 770px;
 
@@ -48,6 +48,28 @@ const PostWrapper = styled.div`
       float: right;
     }
   }
+
+  @media (width <= 1240px) {
+    width: 90%;
+    height: 100%;
+    margin: 0 auto;
+
+    img {
+      width: 100%;
+      height: 473px;
+    }
+
+    button {
+      margin-bottom: 15px;
+    }
+  }
+
+  @media (width <= 768px) {
+    img {
+      width: 100%;
+      height: 273px;
+    }
+  }
 `;
 
 function FullWidthPost({ title, body, id }) {
@@ -57,7 +79,7 @@ function FullWidthPost({ title, body, id }) {
       <img src={cat} alt="cat" />
       <div className="text">
         <div className="postHeader">
-          <h2>{`${title.slice(0, 30)}...`}</h2>
+          <h2>{`${title.slice(0, 20)}...`}</h2>
           <Reactions {...{ id }} />
         </div>
         <div className="descr">

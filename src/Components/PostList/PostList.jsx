@@ -12,6 +12,11 @@ const PostListWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
+
+  @media (width <= 1240px) {
+    grid-template-columns: 1fr;
+    margin: 0 auto;
+  }
 `;
 
 function PostList() {
