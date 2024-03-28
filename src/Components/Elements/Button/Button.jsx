@@ -34,6 +34,7 @@ function Button({ body, id, title }) {
         state={{
           body,
           title,
+          id,
         }}
       >
         <button
