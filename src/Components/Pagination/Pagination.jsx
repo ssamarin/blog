@@ -30,6 +30,7 @@ function Pagination() {
   const dispatch = useDispatch();
   const countOfPage = useSelector((state) => state.postsList.countOfPage);
   const postsLoadingStatus = useSelector((state) => state.postsList.postsLoadingStatus);
+  const posts = useSelector((state) => state.postsList.posts);
 
   const changePage = (num, offset) => {
     dispatch(setCountOfPage(num));
@@ -47,7 +48,7 @@ function Pagination() {
         onClick={() => changePage(-1, -5)}
         type="button"
         aria-label="back"
-        disabled={countOfPage === 1}
+        disabled={countOfPage === 1 || posts.length < 2}
       >
         <img src={left} alt="back" />
       </button>
@@ -57,12 +58,12 @@ function Pagination() {
       {' '}
       <span>из</span>
       {' '}
-      <span>20</span>
+      <span>{posts.length < 2 ? 1 : 20}</span>
       <button
         onClick={() => changePage(1, 5)}
         type="button"
         aria-label="more"
-        disabled={countOfPage === 20}
+        disabled={countOfPage === 20 || posts.length < 2}
       >
         <img src={right} alt="more" />
       </button>
