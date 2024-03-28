@@ -26,34 +26,6 @@ const SinglePostWrapper = styled.section`
         display: flex;
         align-items: center;
       }
-
-      .reactions {
-        display: flex;
-        column-gap: 24px;
-
-        .reaction__count {
-          display: flex;
-          align-items: center;
-          column-gap: 8px;
-
-          p {
-            color: #4f4f4f;
-            font-size: 16px;
-            line-height: 112%;
-          }
-
-          button {
-            width: 32px;
-            height: 32px;
-            background-color: transparent;
-          }
-
-          img {
-            width: 32px;
-            height: 32px;
-          }
-        }
-      }
     }
 
     h1 {
