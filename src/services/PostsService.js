@@ -16,7 +16,7 @@ function usePostsService() {
   const getAllPosts = async () => {
     dispatch(postsFetching());
     try {
-      const resp = await request();
+      const resp = await request('https://jsonplaceholder.typicode.com/posts');
       dispatch(postsFetched(resp.slice(+offset, +limit)));
     } catch (e) {
       dispatch(postsFetchingError());

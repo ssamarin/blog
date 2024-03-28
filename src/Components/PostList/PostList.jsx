@@ -20,17 +20,23 @@ const PostListWrapper = styled.div`
 `;
 
 function PostList() {
-  const { getAllPosts } = usePostsService();
+  const { getAllPosts, filterByName } = usePostsService();
   const posts = useSelector((state) => state.postsList.posts);
   const offset = useSelector((state) => state.postsList.offset);
   const postsLoadingStatus = useSelector((state) => state.postsList.postsLoadingStatus);
   const searchData = useSelector((state) => state.subHeader.searchData);
+  const dbSearchData = useSelector((state) => state.subHeader.dbSearchData);
 
   const memoizedGetAllPosts = useMemo(() => getAllPosts, [getAllPosts]);
+  const memoizedFilterByName = useMemo(() => filterByName, [filterByName]);
 
   useEffect(() => {
-    memoizedGetAllPosts();
-  }, [offset]);
+    if (dbSearchData.length === 0) {
+      memoizedGetAllPosts();
+    } else {
+      memoizedFilterByName(dbSearchData);
+    }
+  }, [offset, dbSearchData]);
 
   const searchPosts = (search) => {
     if (search.length === 0) {

@@ -1,7 +1,7 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { updateSearchData } from './subHeaderSlice';
+import { updateSearchData, updateDbSearchData } from './subHeaderSlice';
 
 import search from '../../assets/icons/search.svg';
 
@@ -25,15 +25,21 @@ const SubHeaderWrapper = styled.section`
     background: url(${search}) no-repeat 14px 14px;
     border: 1px solid rgb(145 158 171 / 32%);
     border-radius: 6px;
-    transition:
-      border-color 0.3s,
-      background-color 0.3s;
+    transition: opacity 0.3s ease;
 
     &:active,
     &:focus {
       outline: none;
       background-color: #f2f2f2;
       border-color: #999;
+    }
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      border: 2px dashed #999;
+      background-color: #f0f0f0;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
   }
 
@@ -53,14 +59,20 @@ const SubHeaderWrapper = styled.section`
 
 function SubHeader() {
   const dispatch = useDispatch();
+  const searchData = useSelector((state) => state.subHeader.searchData);
+  const dbSearchData = useSelector((state) => state.subHeader.dbSearchData);
 
   const onSearchDataChange = (value) => {
     dispatch(updateSearchData(value));
   };
 
+  const onDbSearchDataChange = (value) => {
+    dispatch(updateDbSearchData(value));
+  };
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      dispatch(updateSearchData(e.target.value));
+      dispatch(updateDbSearchData(e.target.value));
     }
   };
 
@@ -72,9 +84,16 @@ function SubHeader() {
       </p>
       <input
         onChange={(e) => onSearchDataChange(e.target.value)}
-        onKeyDown={handleKeyDown}
         type="text"
-        placeholder="Поиск по названию статьи"
+        disabled={dbSearchData.length > 1}
+        placeholder="Поиск по странице"
+      />
+      <input
+        onBlur={(e) => onDbSearchDataChange(e.target.value)}
+        type="text"
+        onKeyDown={handleKeyDown}
+        disabled={searchData.length > 1}
+        placeholder="Серверный поиск"
       />
     </SubHeaderWrapper>
   );
