@@ -56,13 +56,22 @@ const SinglePostWrapper = styled.section`
       line-height: 144%;
     }
 
-  @media (width <= 1240px) {
+  @media (max-width: 1240px) {
     header {
       padding: 0 25px;
     }
 
     p {
       text-align: center;
+    }
+  }
+
+  @media (max-width: 800px) {
+    .picture {
+      img {
+        width: 90%;
+        height: 373px;
+      }
     }
   }
 `;

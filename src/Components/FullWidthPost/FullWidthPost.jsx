@@ -49,7 +49,7 @@ const PostWrapper = styled.div`
     }
   }
 
-  @media (width <= 1240px) {
+  @media (max-width: 1240px) {
     width: 90%;
     height: 100%;
     margin: 0 auto;
@@ -64,7 +64,7 @@ const PostWrapper = styled.div`
     }
   }
 
-  @media (width <= 768px) {
+  @media (max-width: 768px) {
     img {
       width: 100%;
       height: 273px;

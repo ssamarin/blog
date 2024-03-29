@@ -44,7 +44,7 @@ const SubHeaderWrapper = styled.section`
   }
 
 
-  @media (width <= 1240px) {
+  @media (max-width: 1240px) {
     display: flex;
     flex-direction: column;
     align-items: center;
